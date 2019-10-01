@@ -4,6 +4,9 @@ var sql = require("mysql");
 var inquirer = require("inquirer");
 // Import table
 var Table = require('cli-table');
+// For colorful console logging
+const chalk = require('chalk');
+var amountSpent;
 
 // Create connection
 var connection = sql.createConnection({
@@ -50,12 +53,12 @@ function askQuestion(){
     inquirer.prompt([
         {
             type: "input",
-            message: "Enter the item_id you wish to buy",
+            message: "ENTER ITEM ID YOU WISH TO PURCHASE",
             name: "id"
         },
         {
             type: "input",
-            message: "How many products you wish to buy",
+            message: "HOW MANY PRODUCTS YOU WISH TO BUY",
             name: "number"
         }
 
@@ -74,28 +77,23 @@ function check(id, number){
         
         // If stock is minium, then alerts user insufficient quantity
         if(number > result[i].STOCK_QUANTITY){
-            console.log("Sorry. Insufficient quantity. Order can't be placed");
+            console.log(chalk.red("\nSORRY. INSUFFICIENT QUANTITY. ORDER CAN'T BE PLACED NOW"));
+            console.log(chalk.yellow("\nTRY PURCHASING OTHER STUFFS WHILE WE RELOAD!\n"));
+            // For insufficient quantity, prompts user if they wish to continue
+            ifContinue();
         }
         else if(number <= result[i].STOCK_QUANTITY){
             var newStock = result[i].STOCK_QUANTITY - number;
-            console.log(newStock);
             // Update new stock value
-            updateTable(id, newStock);
+            updateTable(id, newStock, number);
         }
     }
-        // End the connection
-        connection.end();
+        
     })
 }
 
 // Function to update new values into table
-function updateTable(id, newStock){
-    // var sql = "UPDATE PRODUCTS SET STOCK_QUANTITY = " + newStock;
-    //             var where = "WHERE ITEM_ID = " + id;
-    //             connection.query(sql, where, function (err, result) {
-    //                 if (err) throw err;
-    //                 console.log(result.affectedRows + " record(s) updated");
-    //               });
+function updateTable(id, newStock, number){
 
                   connection.query(
                     "UPDATE PRODUCTS SET ? WHERE ?",
@@ -109,9 +107,52 @@ function updateTable(id, newStock){
                     ],
                     function(error) {
                       if (error) throw err;
-                      console.log("Your purchase is done!");
-                      
+                      else{
+                          calcPrice(id, number);
+                          
+                      }
+                                       
                     }
                   );
 
+}
+
+// Function to calculate amount spent
+function calcPrice(id, number){
+    connection.query(
+        "SELECT PRICE FROM PRODUCTS WHERE ITEM_ID=?",[id],
+        function(err, result){
+            if(err) throw err;
+            for(var i=0; i<result.length; i++){
+            // Calculating amount spent by multiplying price and number of items purchased
+            amountSpent = number  * result[i].PRICE;
+            console.log("You payed " + amountSpent.toFixed(2)); 
+            ifContinue();
+
+            }
+        }
+        
+    )
+
+}
+
+// Function to ask user if they wish to continue purchase
+function ifContinue(){
+    inquirer.prompt([
+        {
+            type: "confirm",
+            message: chalk.blue("DO YOU WISH TO CONTINUE PURCHASE?"),
+            name: "answer"
+        }
+    ]).then(function(response){
+        if(response.answer){
+            // If user's answer was yes, then display table again and ask questions
+            displayTable();
+        }
+        else{
+            console.log(chalk.green("\nSEE YOU SOON!"));
+            // End the connection
+            connection.end();
+        }
+    })
 }
