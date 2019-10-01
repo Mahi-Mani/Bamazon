@@ -4,6 +4,12 @@ var sql = require("mysql");
 var inquirer = require("inquirer");
 // Import table
 var Table = require('cli-table');
+// For colorful console logging
+const chalk = require('chalk');
+// Variable Declarations
+var productNameArr = [];
+var stock;
+var newStock;
 
 // Create connection
 var connection = sql.createConnection({
@@ -40,6 +46,12 @@ function askQuestions(){
         }
         if(answer.choice == "VIEW LOW INVENTORY"){
             viewLowInventory();
+        }
+        if(answer.choice == "ADD TO INVENTORY"){
+            addToWhichInventory();
+        }
+        if(answer.choice == "ADD NEW PRODUCT"){
+            addWhichNewProduct();
         }
         if(answer.choice == "EXIT"){
             // End connection
@@ -88,5 +100,86 @@ function viewLowInventory(){
 
     })
     
+}
+
+// Function that asks manager to which inventory he/she would like to add
+function addToWhichInventory(){
+    // Selects product name from the table
+    connection.query("SELECT * FROM PRODUCTS", function(err, result){
+        if(err) throw err;
+        for(var i=0; i<result.length; i++){
+            // Pushes queried product names to product name array
+            productNameArr.push(result[i].PRODUCT_NAME);
+        }
+
+    inquirer.prompt([
+        {
+            type: "list",
+            message: "WHICH INVENTORY DO YOU WISH TO ADD MORE ?",
+            choices: productNameArr,
+            name: "choice"
+        },
+        {
+            type: "input",
+            message: "HOW MANY DO YOU LIKE TO ADD ?",
+            name: "number"
+        }
+    ]).then(function(answer){
+        // Passing manager's choice to add to inventory function
+        addToInventory(answer.choice, answer.number);
+    })
+})
+}
+
+// Function that adds more stock to any inventory
+function addToInventory(inventory, number){
+    // Query to select the stock quantity of inventory selected
+    connection.query("SELECT STOCK_QUANTITY FROM PRODUCTS WHERE PRODUCT_NAME=?",[inventory],function(err, result){
+        if(err) throw err;
+        for(var i=0; i<result.length; i++){
+        stock = result[i].STOCK_QUANTITY;
+        }
+        newStock = parseInt(stock) + parseInt(number);
+
+    // Query to update the stock quantity of inventory selected
+    connection.query(
+        "UPDATE PRODUCTS SET ? WHERE ?",
+        [
+          {
+            STOCK_QUANTITY: newStock
+          },
+          {
+            PRODUCT_NAME: inventory
+          }
+        ],
+        function(error) {
+          if (error) throw error;
+          console.log("\nINVENTORY ADDED");
+          ifContinue();
+                           
+        }
+      );
+    })
+}
+
+// Function that asks manager to quit or continue
+function ifContinue(){
+    inquirer.prompt([
+        {
+            type: "confirm",
+            message: chalk.blue("DO YOU WISH TO CONTINUE ?"),
+            name: "answer"
+        }
+    ]).then(function(response){
+        if(response.answer){
+            // If user's answer was yes, then display table again and ask questions
+            askQuestions();
+        }
+        else{
+            console.log(chalk.green("\nSEE YOU SOON!"));
+            // End the connection
+            connection.end();
+        }
+    })
 }
 

@@ -150,7 +150,7 @@ function ifContinue(){
             displayTable();
         }
         else{
-            console.log(chalk.green("\nSEE YOU SOON!"));
+            console.log(chalk.green("\nTHANK YOU! SEE YOU SOON!"));
             // End the connection
             connection.end();
         }
