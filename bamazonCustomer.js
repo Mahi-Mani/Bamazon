@@ -21,8 +21,6 @@ connection.connect(function(err){
     // console.log("Connected with id " + connection.threadId);
     // Display Table
     displayTable();
-    // End the connection
-    connection.end();
 
 });
 
@@ -62,16 +60,41 @@ function askQuestion(){
         }
 
     ]).then(function(answer){
-        console.log(answer.id);
-        console.log(answer.number);
+        // Passing user's answer as arguments to check function
         check(answer.id, answer.number);
     })
 }
 
 // Function to check if item is available in table
 function check(id, number){
-    connection.query("SELECT STOCK_QUANTITY FROM PRODUCTS WHERE ITEM_ID=?",[answer.id],function(err,result){
+    // Selects stock_quantity from products table
+    connection.query("SELECT STOCK_QUANTITY FROM PRODUCTS WHERE ITEM_ID=?",[id],function(err,result){
         if(err) throw err;
-        console.log(result);
+        for(var i=0; i<result.length; i++){
+        
+        // If stock is minium, then alerts user insufficient quantity
+        if(number > result[i].STOCK_QUANTITY){
+            console.log("Sorry. Insufficient quantity. Order can't be placed");
+        }
+        else if(number <= result[i].STOCK_QUANTITY){
+            var newStock = result[i].STOCK_QUANTITY - number;
+            console.log(newStock);
+            // Update new stock value
+            updateTable(id, newStock);
+        }
+    }
+        // End the connection
+        connection.end();
     })
+}
+
+// Function to update new values into table
+function updateTable(id, newStock){
+    var sql = "UPDATE PRODUCTS SET STOCK_QUANTITY = " + newStock;
+                var where = "WHERE ITEM_ID = " + id;
+                connection.query(sql, where, function (err, result) {
+                    if (err) throw err;
+                    console.log(result.affectedRows + " record(s) updated");
+                  });
+
 }
