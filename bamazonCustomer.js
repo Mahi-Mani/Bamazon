@@ -21,7 +21,7 @@ var connection = sql.createConnection({
 connection.connect(function(err){
     // Throws error if found
     if(err) throw err;
-    // console.log("Connected with id " + connection.threadId);
+
     // Display Table
     displayTable();
 
@@ -126,7 +126,7 @@ function calcPrice(id, number){
             for(var i=0; i<result.length; i++){
             // Calculating amount spent by multiplying price and number of items purchased
             amountSpent = number  * result[i].PRICE;
-            console.log("You payed " + amountSpent.toFixed(2)); 
+            console.log("\nYOU PAYED " + amountSpent.toFixed(2)); 
             ifContinue();
 
             }
