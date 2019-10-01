@@ -90,11 +90,28 @@ function check(id, number){
 
 // Function to update new values into table
 function updateTable(id, newStock){
-    var sql = "UPDATE PRODUCTS SET STOCK_QUANTITY = " + newStock;
-                var where = "WHERE ITEM_ID = " + id;
-                connection.query(sql, where, function (err, result) {
-                    if (err) throw err;
-                    console.log(result.affectedRows + " record(s) updated");
-                  });
+    // var sql = "UPDATE PRODUCTS SET STOCK_QUANTITY = " + newStock;
+    //             var where = "WHERE ITEM_ID = " + id;
+    //             connection.query(sql, where, function (err, result) {
+    //                 if (err) throw err;
+    //                 console.log(result.affectedRows + " record(s) updated");
+    //               });
+
+                  connection.query(
+                    "UPDATE PRODUCTS SET ? WHERE ?",
+                    [
+                      {
+                        STOCK_QUANTITY: newStock
+                      },
+                      {
+                        ITEM_ID: id
+                      }
+                    ],
+                    function(error) {
+                      if (error) throw err;
+                      console.log("Your purchase is done!");
+                      
+                    }
+                  );
 
 }
