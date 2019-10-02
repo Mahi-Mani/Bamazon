@@ -9,6 +9,7 @@ const chalk = require('chalk');
 const orange = chalk.keyword('orange');
 const violet = chalk.keyword('violet');
 var amountSpent;
+var totalSpent = 0;
 var productSales;
 
 // Create connection
@@ -131,6 +132,8 @@ function calcPrice(id, number){
             amountSpent = number  * result[i].PRICE;
             console.log(chalk.green("\nYOU PAYED " + amountSpent.toFixed(2)) + "\n"); 
             updateProductSales(amountSpent, id);
+            // Calculate the amount spent by user on total purchase
+            totalSpent = totalSpent + amountSpent;
             ifContinue();
 
             }
@@ -184,6 +187,7 @@ function ifContinue(){
             displayTable();
         }
         else{
+            console.log(orange("\nYOU SPENT A TOTAL OF " + totalSpent + " BUCKS"));
             console.log(orange("\nTHANK YOU! SEE YOU SOON!"));
             // End the connection
             connection.end();
