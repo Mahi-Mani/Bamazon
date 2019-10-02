@@ -59,35 +59,19 @@ function askQuestion(){
         if(answer.choice == "VIEW PRODUCT SALES BY DEPARTMENT"){
             viewProductSales();
         }
+        if(answer.choice == "CREATE NEW DEPARTMENT"){
+            askDepartmentDetails();
+        }
         
     });
 }
 
 // Function to display product sales
 function viewProductSales(){
-    // connection.query(
-    //     "SELECT DEPARTMENTS.DEPARTMENT_ID, DEPARTMENTS.DEPARTMENT_NAME,SUM(PRODUCTS.PRODUCT_SALES) FROM DEPARTMENTS INNER JOIN PRODUCTS ON DEPARTMENTS.DEPARTMENT_NAME = PRODUCTS.DEPARTMENT_NAME GROUP BY DEPARTMENTS.DEPARTMENT_NAME"
-    // ),
-    // // connection.query("SELECT * FROM DEPARTMENTS", 
-    // function(err, result){
-    //     if(err) throw err;
-    //     var table = new Table({ head: ["DEPARTMENT_ID", ,"DEPARTMENT_NAME", "PRODUCT_SALES"] });
 
-    //     for(var i=0; i<result.length; i++){
-    //         console.log(result[i]);
-
-    //         table.push(
-    //             [result[i].DEPARTMENT_ID, result[i].DEPARTMENT_NAME, result[i].OVER_HEAD_COSTS] 
-    //         );
-    //         }
-    //         // Display table to screen
-    //         console.log(table.toString());
-    //         // To ask question to supervisor
-    //         // askQuestion();
-    // } 
-
+    // Query to inner join two tables
     var query = "SELECT DEPARTMENTS.DEPARTMENT_ID, DEPARTMENTS.DEPARTMENT_NAME, DEPARTMENTS.OVER_HEAD_COSTS, SUM(PRODUCTS.PRODUCT_SALES) AS PRODUCT_SALES, ";
-        query += "(PRODUCTS.PRODUCT_SALES - DEPARTMENTS.OVER_HEAD_COSTS) AS TOTAL_PROFIT "
+        query += "(SUM(PRODUCTS.PRODUCT_SALES) - DEPARTMENTS.OVER_HEAD_COSTS) AS TOTAL_PROFIT "
       query += "FROM DEPARTMENTS INNER JOIN PRODUCTS ON (DEPARTMENTS.DEPARTMENT_NAME = PRODUCTS.DEPARTMENT_NAME ";
       query += ") GROUP BY DEPARTMENTS.DEPARTMENT_NAME ORDER BY DEPARTMENTS.DEPARTMENT_ID";
 
@@ -97,7 +81,6 @@ function viewProductSales(){
         var table = new Table({ head: ["DEPARTMENT_ID", "DEPARTMENT_NAME", "OVER_HEAD_COSTS", "PRODUCT_SALES", "TOTAL_PROFIT"] });
 
         for(var i=0; i<result.length; i++){
-            // console.log(result[i]);
 
             table.push(
                 [result[i].DEPARTMENT_ID, result[i].DEPARTMENT_NAME, result[i].OVER_HEAD_COSTS, result[i].PRODUCT_SALES, result[i].TOTAL_PROFIT] 
@@ -106,7 +89,39 @@ function viewProductSales(){
             // Display table to screen
             console.log(table.toString());
             // To ask question to supervisor
-            // askQuestion();
+            askQuestion();
      
 });
+}
+
+// Function to ask department details to the supervisor
+function askDepartmentDetails(){
+    inquirer.prompt([
+        {
+        type: "input",
+        message: "Name of the department you want to add",
+        name: "departmentName"
+        },
+        {
+            type: "input",
+            message: "Over head estimated costs",
+            name: "overHeadCosts"
+        }
+    ]).then(function(answer){
+        createNewDepartment(answer.departmentName, answer.overHeadCosts);
+    })
+}
+
+// Function to create new department
+function createNewDepartment(departmentName, overHeadCosts){
+    connection.query(
+        "INSERT INTO DEPARTMENTS SET ?",
+        {
+            DEPARTMENT_NAME: departmentName,
+            OVER_HEAD_COSTS: overHeadCosts
+        },
+    function(err, result){
+        if(err) throw err;
+        console.log("\nDEPARTMENT CREATED SUCCESSFULLY!\n");
+    });
 }
