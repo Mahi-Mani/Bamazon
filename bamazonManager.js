@@ -38,7 +38,7 @@ function askQuestions(){
         {
             type: "list",
             message: violet("WHAT WOULD YOU LIKE TO DO ?"),
-            choices: ["VIEW PRODUCTS FOR SALE", "VIEW LOW INVENTORY", "ADD TO INVENTORY", "ADD NEW PRODUCT", "EXIT"],
+            choices: ["VIEW PRODUCTS FOR SALE", "VIEW LOW INVENTORY", "ADD TO INVENTORY", "ADD NEW PRODUCT", "DELETE A PRODUCT", "EXIT"],
             name: "choice"
         }
     ]).then(function(answer){
@@ -54,6 +54,9 @@ function askQuestions(){
         }
         if(answer.choice == "ADD NEW PRODUCT"){
             addWhatNewProduct();
+        }
+        if(answer.choice == "DELETE A PRODUCT"){
+            deleteWhichProduct();
         }
         if(answer.choice == "EXIT"){
             // End connection
@@ -203,15 +206,44 @@ function addNewProduct(name, category, cost, stock){
                 PRODUCT_NAME: name,
                 DEPARTMENT_NAME: category,
                 PRICE: cost,
-                STOCK_QUANTITY: stock
+                STOCK_QUANTITY: stock,
+                PRODUCT_SALES: 0
             },
             function(err) {
               if (err) throw err;
-              console.log(chalk.yellow("\n" + name + " WAS ADDED TO THE TABLE SUCCESSFULLY\n"));
+              console.log(chalk.yellow("\n" + name.toUpperCase() + " WAS ADDED TO THE TABLE SUCCESSFULLY\n"));
 
               // Prompts to either continue or exit
             ifContinue();
             });
+}
+
+// Function that asks manager to delete which product
+function deleteWhichProduct(){
+    inquirer.prompt([
+        {
+        type:"input",
+        message: "ENTER THE PRODUCT ID YOU WISH TO DELETE",
+        name: "id"
+        }
+
+    ]).then(function(answer){
+        deleteProduct(answer.id);
+    })
+
+}
+
+// Function that deletes a product chosen by manager
+function deleteProduct(id){
+    
+    connection.query(
+        "DELETE FROM PRODUCTS WHERE ITEM_ID = ?",[id]
+    ,function(err, result){
+        if(err) throw err;
+        console.log(chalk.red("PRODUCT DELETED!"));
+                ifContinue();
+    })
+
 }
 
 // Function that asks manager to quit or continue

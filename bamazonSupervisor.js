@@ -54,7 +54,7 @@ function askQuestion(){
         {
             type: "list",
             message: violet("WHAT WOULD YOU LIKE TO DO ?"),
-            choices: ["VIEW PRODUCT SALES BY DEPARTMENT", "CREATE NEW DEPARTMENT","EXIT"],
+            choices: ["VIEW PRODUCT SALES BY DEPARTMENT", "CREATE NEW DEPARTMENT","VIEW DEPARTMENT THAT FACES LOSS", "EXIT"],
             name: "choice"
         }
     ]).then(function(answer){
@@ -64,6 +64,9 @@ function askQuestion(){
         }
         if(answer.choice == "CREATE NEW DEPARTMENT"){
             askDepartmentDetails();
+        }
+        if(answer.choice == "VIEW DEPARTMENT THAT FACES LOSS"){
+            displayLoss();
         }
         if(answer.choice == "EXIT"){
             // End connection
@@ -129,6 +132,58 @@ function createNewDepartment(departmentName, overHeadCosts){
         },
     function(err, result){
         if(err) throw err;
-        console.log(chalk.yellow("\nDEPARTMENT CREATED SUCCESSFULLY!\n"));
+        console.log(chalk.yellow("\nDEPARTMENT " + departmentName.toUpperCase() + " CREATED SUCCESSFULLY!\n"));
+        // Prompts to either continue or exit
+        ifContinue();
     });
+}
+
+// Function that displays revenue loss
+function displayLoss(){
+    // Query to inner join two tables
+    var query = "SELECT DEPARTMENTS.DEPARTMENT_ID, DEPARTMENTS.DEPARTMENT_NAME, DEPARTMENTS.OVER_HEAD_COSTS, SUM(PRODUCTS.PRODUCT_SALES) AS PRODUCT_SALES, ";
+        query += "(SUM(PRODUCTS.PRODUCT_SALES) - DEPARTMENTS.OVER_HEAD_COSTS) AS TOTAL_PROFIT "
+      query += "FROM DEPARTMENTS INNER JOIN PRODUCTS ON (DEPARTMENTS.DEPARTMENT_NAME = PRODUCTS.DEPARTMENT_NAME ";
+      query += ") GROUP BY DEPARTMENTS.DEPARTMENT_NAME ORDER BY DEPARTMENTS.DEPARTMENT_ID";
+
+      connection.query(query, 
+        function(err, result){
+            if(err) throw err;
+            var table = new Table({ head: ["DEPARTMENT_ID", "DEPARTMENT_NAME", "OVER_HEAD_COSTS", "PRODUCT_SALES", "TOTAL_PROFIT"] });
+    
+            for(var i=0; i<result.length; i++){
+                if(result[i].TOTAL_PROFIT < 0){    
+                table.push(
+                    [result[i].DEPARTMENT_ID, result[i].DEPARTMENT_NAME, result[i].OVER_HEAD_COSTS, result[i].PRODUCT_SALES, result[i].TOTAL_PROFIT] 
+                );
+                }
+            }
+                // Display table to screen
+                console.log(table.toString());
+                // To ask question to supervisor
+                askQuestion();
+         
+    });
+
+}
+
+// Function that asks supervisor to quit or continue
+function ifContinue(){
+    inquirer.prompt([
+        {
+            type: "confirm",
+            message: violet("DO YOU WISH TO CONTINUE ?"),
+            name: "answer"
+        }
+    ]).then(function(response){
+        if(response.answer){
+            // If user's answer was yes, then display table again and ask questions
+            askQuestion();
+        }
+        else{
+            console.log(orange("\nSEE YOU SOON!"));
+            // End the connection
+            connection.end();
+        }
+    })
 }
