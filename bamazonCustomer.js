@@ -9,6 +9,7 @@ const chalk = require('chalk');
 const orange = chalk.keyword('orange');
 const violet = chalk.keyword('violet');
 var amountSpent;
+var productSales;
 
 // Create connection
 var connection = sql.createConnection({
@@ -129,6 +130,7 @@ function calcPrice(id, number){
             // Calculating amount spent by multiplying price and number of items purchased
             amountSpent = number  * result[i].PRICE;
             console.log(chalk.green("\nYOU PAYED " + amountSpent.toFixed(2)) + "\n"); 
+            updateProductSales(amountSpent, id);
             ifContinue();
 
             }
@@ -136,6 +138,36 @@ function calcPrice(id, number){
         
     )
 
+}
+
+// Function to add value to product sales table
+function updateProductSales(amountSpent, id){
+    // Select Product sales from table
+    connection.query("SELECT PRODUCT_SALES FROM PRODUCTS WHERE ITEM_ID=?",[id], function(err, result){
+        if(err) throw err;
+        for(var i=0; i<result.length; i++){
+        productSales = parseInt(amountSpent) + parseInt(result[i].PRODUCT_SALES);
+        }
+
+        // Updating product sales column
+    connection.query(
+        "UPDATE PRODUCTS SET ? WHERE ?",
+        [
+        {
+            PRODUCT_SALES: productSales
+        },
+        {
+            ITEM_ID: id
+        }
+    ],
+    function(err, result){
+        if(err) throw err;
+        // console.log("PRODUCT SALES UPDATED");
+    }
+    )
+
+    })
+    
 }
 
 // Function to ask user if they wish to continue purchase
