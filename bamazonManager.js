@@ -27,9 +27,35 @@ connection.connect(function(err){
     // Throws error if found
     if(err) throw err;
     // Ask questions to manager
-    askQuestions();
+    checkCredentials();
 
 });
+
+// Function to check manager's credentials
+function checkCredentials(){
+    inquirer.prompt([
+    {
+        type: "input",
+        message: chalk.green("ENTER YOUR USERNAME ?"),
+        name: "name"
+    },
+    {
+        type: "password",
+        message: chalk.green("ENTER YOUR PASSWORD ?"),
+        name: "password"
+    }
+
+]).then(function(answer){
+    // Checking credentials
+    if(answer.password === "root"){
+        askQuestions();
+    }
+    else{
+        console.log(chalk.red("NOT AUTHENTICATED"));
+        connection.end();
+    }
+})
+}
 
 // Function to ask questions to manager
 function askQuestions(){

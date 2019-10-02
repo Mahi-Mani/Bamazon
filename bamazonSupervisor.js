@@ -22,10 +22,37 @@ connection.connect(function(err){
     // Throws error if found
     if(err) throw err;
 
-    // Display Table
-    displayTable();
-
+    // Ask questions to supervisor
+    checkCredentials();
 });
+
+// Function to check supervisor's credentials
+function checkCredentials(){
+    inquirer.prompt([
+    {
+        type: "input",
+        message: chalk.green("ENTER YOUR USERNAME ?"),
+        name: "name"
+    },
+    {
+        type: "password",
+        message: chalk.green("ENTER YOUR PASSWORD ?"),
+        name: "password"
+    }
+
+]).then(function(answer){
+    // Checking credentials
+    if(answer.password === "root"){
+        // Display Table
+        displayTable();
+
+    }
+    else{
+        console.log(chalk.red("NOT AUTHENTICATED"));
+        connection.end();
+    }
+})
+}
 
 // Function to display table
 function displayTable(){
