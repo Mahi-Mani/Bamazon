@@ -10,6 +10,8 @@ const chalk = require('chalk');
 var productNameArr = [];
 var stock;
 var newStock;
+const orange = chalk.keyword('orange');
+const violet = chalk.keyword('violet');
 
 // Create connection
 var connection = sql.createConnection({
@@ -154,7 +156,7 @@ function addToInventory(inventory, number){
         ],
         function(error) {
           if (error) throw error;
-          console.log("\nINVENTORY ADDED");
+          console.log(chalk.yellow("\nINVENTORY ADDED\n"));
           ifContinue();
                            
         }
@@ -205,7 +207,7 @@ function addNewProduct(name, category, cost, stock){
             },
             function(err) {
               if (err) throw err;
-              console.log("\n" + name + " WAS ADDED TO THE TABLE SUCCESSFULLY\n");
+              console.log(chalk.yellow("\n" + name + " WAS ADDED TO THE TABLE SUCCESSFULLY\n"));
 
               // Prompts to either continue or exit
             ifContinue();
@@ -217,7 +219,7 @@ function ifContinue(){
     inquirer.prompt([
         {
             type: "confirm",
-            message: chalk.blue("DO YOU WISH TO CONTINUE ?"),
+            message: violet("DO YOU WISH TO CONTINUE ?"),
             name: "answer"
         }
     ]).then(function(response){
@@ -226,7 +228,7 @@ function ifContinue(){
             askQuestions();
         }
         else{
-            console.log(chalk.green("\nSEE YOU SOON!"));
+            console.log(orange("\nSEE YOU SOON!"));
             // End the connection
             connection.end();
         }

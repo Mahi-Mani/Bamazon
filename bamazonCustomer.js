@@ -6,6 +6,8 @@ var inquirer = require("inquirer");
 var Table = require('cli-table');
 // For colorful console logging
 const chalk = require('chalk');
+const orange = chalk.keyword('orange');
+const violet = chalk.keyword('violet');
 var amountSpent;
 
 // Create connection
@@ -126,7 +128,7 @@ function calcPrice(id, number){
             for(var i=0; i<result.length; i++){
             // Calculating amount spent by multiplying price and number of items purchased
             amountSpent = number  * result[i].PRICE;
-            console.log("\nYOU PAYED " + amountSpent.toFixed(2)); 
+            console.log(chalk.green("\nYOU PAYED " + amountSpent.toFixed(2)) + "\n"); 
             ifContinue();
 
             }
@@ -141,7 +143,7 @@ function ifContinue(){
     inquirer.prompt([
         {
             type: "confirm",
-            message: chalk.blue("DO YOU WISH TO CONTINUE PURCHASE?"),
+            message: violet("DO YOU WISH TO CONTINUE PURCHASE?"),
             name: "answer"
         }
     ]).then(function(response){
@@ -150,7 +152,7 @@ function ifContinue(){
             displayTable();
         }
         else{
-            console.log(chalk.green("\nTHANK YOU! SEE YOU SOON!"));
+            console.log(orange("\nTHANK YOU! SEE YOU SOON!"));
             // End the connection
             connection.end();
         }
