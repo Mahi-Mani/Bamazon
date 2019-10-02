@@ -106,7 +106,7 @@ function updateTable(id, newStock, number){
                       }
                     ],
                     function(error) {
-                      if (error) throw err;
+                      if (error) throw error;
                       else{
                           calcPrice(id, number);
                           

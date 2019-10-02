@@ -51,7 +51,7 @@ function askQuestions(){
             addToWhichInventory();
         }
         if(answer.choice == "ADD NEW PRODUCT"){
-            addWhichNewProduct();
+            addWhatNewProduct();
         }
         if(answer.choice == "EXIT"){
             // End connection
@@ -162,6 +162,56 @@ function addToInventory(inventory, number){
     })
 }
 
+// Function to ask questions to manager on what stuffs to be added to the table
+function addWhatNewProduct(){
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "WHAT IS THE PRODUCT YOU WISH TO ADD ?",
+            name: "productName"
+        },
+        {
+            type: "input",
+            message: "WHAT IS THE CATEGORY ?",
+            name: "productCategory"
+        },
+        {
+            type: "input",
+            message: "HOW MUCH DOES IT COST ?",
+            name: "cost"
+        },
+        {
+            type: "input",
+            message: "AVAILABLE STOCK ?",
+            name: "availableStock"
+        }
+    ]).then(function(answer){
+        // Pass manager's value to add new product function
+        addNewProduct(answer.productName, answer.productCategory, answer.cost, answer.availableStock);
+
+    })
+    
+}
+
+// Function to add new product
+function addNewProduct(name, category, cost, stock){
+    connection.query(
+        "INSERT INTO PRODUCTS SET ?",
+            {
+                PRODUCT_NAME: name,
+                DEPARTMENT_NAME: category,
+                PRICE: cost,
+                STOCK_QUANTITY: stock
+            },
+            function(err) {
+              if (err) throw err;
+              console.log("\n" + name + " WAS ADDED TO THE TABLE SUCCESSFULLY\n");
+
+              // Prompts to either continue or exit
+            ifContinue();
+            });
+}
+
 // Function that asks manager to quit or continue
 function ifContinue(){
     inquirer.prompt([
@@ -182,4 +232,5 @@ function ifContinue(){
         }
     })
 }
+
 
