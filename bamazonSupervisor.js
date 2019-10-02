@@ -4,6 +4,9 @@ var sql = require("mysql");
 var inquirer = require("inquirer");
 // Import table
 var Table = require('cli-table');
+// For colorful console logging
+const chalk = require('chalk');
+const violet = chalk.keyword('violet');
 
 // Create connection
 var connection = sql.createConnection({
@@ -50,8 +53,8 @@ function askQuestion(){
     inquirer.prompt([
         {
             type: "list",
-            message: "WHAT WOULD YOU LIKE TO DO ?",
-            choices: ["VIEW PRODUCT SALES BY DEPARTMENT", "CREATE NEW DEPARTMENT"],
+            message: violet("WHAT WOULD YOU LIKE TO DO ?"),
+            choices: ["VIEW PRODUCT SALES BY DEPARTMENT", "CREATE NEW DEPARTMENT","EXIT"],
             name: "choice"
         }
     ]).then(function(answer){
@@ -61,6 +64,10 @@ function askQuestion(){
         }
         if(answer.choice == "CREATE NEW DEPARTMENT"){
             askDepartmentDetails();
+        }
+        if(answer.choice == "EXIT"){
+            // End connection
+            connection.end();
         }
         
     });
@@ -99,12 +106,12 @@ function askDepartmentDetails(){
     inquirer.prompt([
         {
         type: "input",
-        message: "Name of the department you want to add",
+        message: violet("NAME OF THE DEPARTMENT YOU WANT TO ADD"),
         name: "departmentName"
         },
         {
             type: "input",
-            message: "Over head estimated costs",
+            message: violet("OVER HEAD ESTIMATED COSTS"),
             name: "overHeadCosts"
         }
     ]).then(function(answer){
@@ -122,6 +129,6 @@ function createNewDepartment(departmentName, overHeadCosts){
         },
     function(err, result){
         if(err) throw err;
-        console.log("\nDEPARTMENT CREATED SUCCESSFULLY!\n");
+        console.log(chalk.yellow("\nDEPARTMENT CREATED SUCCESSFULLY!\n"));
     });
 }

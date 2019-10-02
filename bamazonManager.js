@@ -37,7 +37,7 @@ function askQuestions(){
     inquirer.prompt([
         {
             type: "list",
-            message: "WHAT WOULD YOU LIKE TO DO ?",
+            message: violet("WHAT WOULD YOU LIKE TO DO ?"),
             choices: ["VIEW PRODUCTS FOR SALE", "VIEW LOW INVENTORY", "ADD TO INVENTORY", "ADD NEW PRODUCT", "EXIT"],
             name: "choice"
         }
@@ -117,13 +117,13 @@ function addToWhichInventory(){
     inquirer.prompt([
         {
             type: "list",
-            message: "WHICH INVENTORY DO YOU WISH TO ADD MORE ?",
+            message: violet("WHICH INVENTORY DO YOU WISH TO ADD MORE ?"),
             choices: productNameArr,
             name: "choice"
         },
         {
             type: "input",
-            message: "HOW MANY DO YOU LIKE TO ADD ?",
+            message: violet("HOW MANY DO YOU LIKE TO ADD ?"),
             name: "number"
         }
     ]).then(function(answer){
@@ -169,22 +169,22 @@ function addWhatNewProduct(){
     inquirer.prompt([
         {
             type: "input",
-            message: "WHAT IS THE PRODUCT YOU WISH TO ADD ?",
+            message: violet("WHAT IS THE PRODUCT YOU WISH TO ADD ?"),
             name: "productName"
         },
         {
             type: "input",
-            message: "WHAT IS THE CATEGORY ?",
+            message: violet("WHAT IS THE CATEGORY ?"),
             name: "productCategory"
         },
         {
             type: "input",
-            message: "HOW MUCH DOES IT COST ?",
+            message: violet("HOW MUCH DOES IT COST ?"),
             name: "cost"
         },
         {
             type: "input",
-            message: "AVAILABLE STOCK ?",
+            message: violet("AVAILABLE STOCK ?"),
             name: "availableStock"
         }
     ]).then(function(answer){

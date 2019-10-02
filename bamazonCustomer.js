@@ -56,12 +56,12 @@ function askQuestion(){
     inquirer.prompt([
         {
             type: "input",
-            message: "ENTER ITEM ID YOU WISH TO PURCHASE",
+            message: violet("ENTER ITEM ID YOU WISH TO PURCHASE"),
             name: "id"
         },
         {
             type: "input",
-            message: "HOW MANY PRODUCTS YOU WISH TO BUY",
+            message: violet("HOW MANY PRODUCTS YOU WISH TO BUY"),
             name: "number"
         }
 
