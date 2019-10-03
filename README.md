@@ -1,11 +1,11 @@
 # Bamazon
 
 ## Summary
-Bamazon application similar to that of amazon that customers can buy stuffs via this application. Customer can view total amount they had paid upon exi. At a next level, manager or supervisor can look into bamazon's status. Manager's view and Supervisor's view are authenticated so that no customer can have those access.
+Bamazon application is similar to that of amazon that customers can buy stuffs via this application. Customers can view total amount they had paid upon exit. At a next level, manager or supervisor can look into bamazon's status. Manager's view and Supervisor's view are authenticated so that no customer can have those access.
 
 ## Installation Guide
-* User has to download all files from GitHub
-* User can either clone the repository or can download all files manually unzipping would take a while though
+* User has to download all files from GitHub repository
+* User can either clone the repository or can download all files manually unzipping might take a while though
 * Package.json file has required depencies to be installed. So, user can type `npm install` to install all needed packages
 * User can type `node bamazonCustomer.js` to have customer view and purchase stuffs
 * User can type `node bamazonManager.js` to have manager view of the application
@@ -22,17 +22,17 @@ To have a customer view type command `node bamazonCustomer.js` in command line. 
 
 ![Site](gifs/customer.gif)
 
-> The above code shoots out the existing products from bamazon. Customers can choose id of the product to make the purchase. Customers can make multiple purchases and at the end, they will be kept informed with the total amount they spent in purchasing stuffs
+> The above code shoots out the existing products from bamazon. Customers can choose id of the product to make purchase. Customers can make multiple purchases and at the end, they will be kept informed with the total amount they spent in purchasing stuffs
 
 ## Manager View
-To have a customer view type command `node bamazonManager.js` in command line. Functioning of application is shown below.
+To have a manager view type command `node bamazonManager.js` in command line. Functioning of application is shown below.
 
 ![Site](gifs/manager.gif)
 
 > The above code execution asks for username and password from Manager that authenticates him/her to proceed further. Application doesn't allow further access unless and until Manager provides correct password. Manager has access to view product sales for all products. Manager also has ability to add/delete new product. Also, manager can view the low inventory available so that new inventories can be added.
 
 ## Supervisor View
-To have a customer view type command `node bamazonSupervisor.js` in command line
+To have a supervisor view of the application type command `node bamazonSupervisor.js` in command line
 
 ![Site](gifs/Supervisor.gif)
 
