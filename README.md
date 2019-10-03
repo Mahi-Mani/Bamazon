@@ -43,7 +43,7 @@ To have a supervisor view of the application type command `node bamazonSuperviso
 > New Department that was added can be seen
 
 ## Code Snippet
-``bamazonCustomer.js``
+*bamazonCustomer.js*
 ```Javascript
 // Function to check if item is available in table
 function check(id, number){
@@ -71,7 +71,7 @@ function check(id, number){
 ```
 Table is scanned and checked if sufficient quantity is enough to fullfil customer's order. If stock falls less to what customer asked for, then application alerts the customer of insufficient quantity.
 
-``bamazonManager.js``
+*bamazonManager.js*
 ```Javascript
 // Function to display Low inventories
 function viewLowInventory(){
@@ -96,7 +96,7 @@ function viewLowInventory(){
 ```
 Displays low inventory data to the view of manager when asked for. As far as this application is concerned, low inventory indicates products that have stock quantity less than 5.
 
-``bamazonSupervisor.js``
+*bamazonSupervisor.js*
 ```Javascript
 // Function to display product sales
 function viewProductSales(){
