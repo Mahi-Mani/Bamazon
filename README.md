@@ -10,6 +10,7 @@ Bamazon application is similar to that of amazon that customers can buy stuffs v
 * User can type `node bamazonCustomer.js` to have customer view and purchase stuffs
 * User can type `node bamazonManager.js` to have manager view of the application
 * User can type `node bamazonSupervisor.js` to have supervisor view of the application
+* ``app.sql`` file contains schemas and values to be inserted to have a view of application
 
 ## Technologies Used
 - Javascript : used to provide interactive effects
