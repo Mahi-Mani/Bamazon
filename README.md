@@ -19,17 +19,28 @@ far as this code is concerned, utilised inquirer to dynamically prompt question 
 ## Customer View
 To have a customer view type command `node bamazonCustomer.js` in command line. Functioning of application is shown below
 
+
+![Site](gifs/customer.gif)
+
 > The above code shoots out the existing products from bamazon. Customers can choose id of the product to make the purchase. Customers can make multiple purchases and at the end, they will be kept informed with the total amount they spent in purchasing stuffs
 
 ## Manager View
 To have a customer view type command `node bamazonManager.js` in command line. Functioning of application is shown below.
+
+![Site](gifs/manager.gif)
 
 > The above code execution asks for username and password from Manager that authenticates him/her to proceed further. Application doesn't allow further access unless and until Manager provides correct password. Manager has access to view product sales for all products. Manager also has ability to add/delete new product. Also, manager can view the low inventory available so that new inventories can be added.
 
 ## Supervisor View
 To have a customer view type command `node bamazonSupervisor.js` in command line
 
+![Site](gifs/Supervisor.gif)
+
 > The above code execution asks for username and password from Supervisor that authenticates him/her to proceed further. Supervisor has the ability to add a new department. Supervisor can view profit/loss status of all departments.
+
+![Site](gifs/newDept.gif)
+
+> New Department that was added can be seen
 
 ## Code Snippet
 ``bamazonCustomer.js``
@@ -122,7 +133,7 @@ The above code displays profit for each department when supervisor asks for
 * Researched and implemented various npm packages like cli-table, chalk to give a decent look on the terminal
 
 ## Future Enhancement
-A future enhancement can be made to this application on manager/supervisor view is that either manager/supervisor has to have the ability to rollback a deletion that was made earlier.
+A future enhancement could be made to this application on manager/supervisor view is that either manager/supervisor has to have the ability to rollback a deletion that was made earlier.
 
 ## Author Links
 [LinkedIn](https://www.linkedin.com/in/mahisha-gunasekaran-0a780a88/)
